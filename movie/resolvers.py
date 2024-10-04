@@ -22,7 +22,7 @@ def update_movie_rate(_,info,_id,_rate):
         json.dump(newmovies, wfile, indent=2)
     return newmovie
 
-def delete_movie_from_id(_, info, _id : str) -> bool: 
+def delete_movie_from_id(_, info, _id : str): 
     with open('{}/data/movies.json'.format("."), "r") as rfile: 
         movies = json.load(rfile)
         for movie in movies['movies'] :
@@ -30,22 +30,41 @@ def delete_movie_from_id(_, info, _id : str) -> bool:
                 movies['movies'].remove(movie)
                 with open('{}/data/movies.json'.format("."), "w") as wfile:
                     json.dump(movies, wfile, indent=2)
-                return True
-    return False
+                return {
+                   "success": True
+                }
+    return {
+        "success": False,
+        "error": f"Movie with id : {_id} not existing"
+    }
 
 def create_movie(_, info, input):
-    movie = {
+    new_movie = {
         "id": str(uuid.uuid4()),
         "title": input["title"],
         "rating": input["rating"],
         "director": input["director"],
     }
-    with open('{}/data/movies.json'.format("."), "r") as rfile: 
-        movies = json.load(rfile)
-        movies["movies"].append(movie)
-        with open('{}/data/movies.json'.format("."), "w") as wfile:
-            json.dump(movies, wfile, indent=2)
-    return movie
+
+    try:
+        with open('{}/data/movies.json'.format("."), "r") as rfile: 
+            movies = json.load(rfile)
+
+            for movie in movies["movies"]:
+                if movie["title"] == new_movie["title"]:
+                    return {
+                        "success": False,
+                        "error": "Movie existing"
+                    }
+            movies["movies"].append(new_movie)
+            with open('{}/data/movies.json'.format("."), "w") as wfile:
+                json.dump(movies, wfile, indent=2)
+        return {"success": True}
+    except Exception as err:
+        return {
+            "success": False,
+            "error": str(err),
+        }
 
 def movies_by_min_rate(_, info, _rate):
     return movies_by_field_with_conditions("rating", lambda rating: rating >= _rate)

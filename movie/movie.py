@@ -9,9 +9,11 @@ app = Flask(__name__)
 # todo create elements for Ariadne
 mutation = MutationType()
 type_defs = load_schema_from_path('movie.graphql')
+
 query = QueryType()
 movie = ObjectType('Movie')
 actor = ObjectType('Actor')
+mutation_result = ObjectType('MutationResult')
 movie_input = InputType('MovieInput')
 
 movie.set_field('actors', r.resolve_actors_in_movie)
@@ -25,7 +27,15 @@ mutation.set_field('update_movie_rate', r.update_movie_rate)
 mutation.set_field('create_movie', r.create_movie)
 mutation.set_field('delete_movie_from_id', r.delete_movie_from_id)
 
-schema = make_executable_schema(type_defs, movie, query, mutation, actor, movie_input)
+schema = make_executable_schema(
+    type_defs, 
+    movie, 
+    query, 
+    mutation, 
+    actor, 
+    movie_input, 
+    mutation_result
+)
 
 # root message
 @app.route("/", methods=['GET'])
