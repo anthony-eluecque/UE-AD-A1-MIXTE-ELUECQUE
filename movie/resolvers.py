@@ -47,6 +47,16 @@ def create_movie(_, info, input):
             json.dump(movies, wfile, indent=2)
     return movie
 
+def movie_by_min_rate(_, info, _rate):
+    matching_movies = []
+    with open('{}/data/movies.json'.format("."), "r") as rfile: 
+        movies = json.load(rfile)
+        for movie in movies["movies"]:
+            if movie["rating"] >= _rate:
+                matching_movies.append(movie)
+    return matching_movies
+
+
 
 def resolve_actors_in_movie(movie, info):
     with open('{}/data/actors.json'.format("."), "r") as file:

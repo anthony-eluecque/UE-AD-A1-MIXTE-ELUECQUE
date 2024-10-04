@@ -17,6 +17,7 @@ movie_input = InputType('MovieInput')
 movie.set_field('actors', r.resolve_actors_in_movie)
 
 query.set_field('movie_with_id', r.movie_with_id)
+query.set_field('movie_by_min_rate', r.movie_by_min_rate)
 
 mutation.set_field('update_movie_rate', r.update_movie_rate)
 mutation.set_field('create_movie', r.create_movie)
