@@ -11,7 +11,11 @@ type Mutation {
     create_movie(input: MovieInput!): MutationResult
 }
 
-type Actor {
+interface EntityId {
+    id: String!
+}
+
+type Actor implements EntityId {
     id: String!
     firstname: String!
     lastname: String!
@@ -19,7 +23,7 @@ type Actor {
     films: [String!]
 }
 
-type Movie {
+type Movie implements EntityId {
     id: String!
     title: String!
     director: String!
