@@ -53,6 +53,13 @@ def movies_by_min_rate(_, info, _rate):
 def movies_by_director(_, info, _director):
     return movies_by_field_with_conditions("director", lambda director: director == _director)
 
+def movie_with_title(_, info, _title):
+    with open('./data/movies.json', "r") as rfile: 
+        movies = json.load(rfile)
+        for movie in movies["movies"]:
+            if movie["title"] == _title:
+                return movie
+
 def movies_by_field_with_conditions(key, condition_func):
     matching_movies = []
     with open('./data/movies.json', "r") as rfile: 
