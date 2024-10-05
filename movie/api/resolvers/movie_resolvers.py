@@ -1,27 +1,13 @@
 import json
-from typing import TypedDict, Optional, List
 import uuid
+import os
+from api.models import Movie,Actor,MutationResponse
+from typing import TypedDict, Optional, List, Callable
 
-MOVIES_DB_PATH : str = "{}/data/movies.json"
-ACTORS_DB_PATH : str = "{}/data/actors.json"
+data_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
 
-class MutationResponse(TypedDict):
-    success : bool
-    error :  Optional[str]
-
-class Movie(TypedDict):
-    id : str
-    title : str
-    director : str
-    rating : float
-
-class Actor(TypedDict):
-    id : str
-    firstname: str
-    lastname : str
-    birthyear : int 
-    films : List[str]
-
+MOVIES_DB_PATH : str = f"{data_folder}/movies.json"
+ACTORS_DB_PATH : str = f"{data_folder}/data/actors.json"
 
 class Json():
     
@@ -42,7 +28,7 @@ class Json():
 def movie_with_id(_, info, _id : str) -> Movie | None:
     movies : List[Movie] = Json.open(MOVIES_DB_PATH, "movies")
     for movie in movies:
-        if movie['id'] == _id:
+        if movie["id"] == _id:
             return movie
     return None
             
@@ -115,7 +101,7 @@ def movie_with_title(_, info, _title : str) -> Movie | None:
             return movie
     return None
 
-def movies_by_field_with_conditions(key : str, condition_func) -> List[Movie]:
+def movies_by_field_with_conditions(key : str, condition_func : Callable) -> List[Movie]:
     matching_movies : List[Movie] = []
     movies : List[Movie] = Json.open(MOVIES_DB_PATH, "movies")
     for movie in movies:
