@@ -1,29 +1,13 @@
-import json
 import uuid
 import os
 from api.models import Movie,Actor,MutationResponse
-from typing import TypedDict, Optional, List, Callable
+from typing import List, Callable
+from api.helpers import Json
 
 data_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
 
 MOVIES_DB_PATH : str = f"{data_folder}/movies.json"
-ACTORS_DB_PATH : str = f"{data_folder}/data/actors.json"
-
-class Json():
-    
-    @staticmethod
-    def open(path : str, key : str):
-        with open(path.format("."), "r") as file:
-            data = json.load(file)
-            return data[key]
-
-    @staticmethod
-    def write(path: str,key: str, data):
-        obj = {
-            key : data
-        }
-        with open(path.format("."), "w") as wfile:
-            json.dump(obj, wfile, indent=2)
+ACTORS_DB_PATH : str = f"{data_folder}/actors.json"
 
 def movie_with_id(_, info, _id : str) -> Movie | None:
     movies : List[Movie] = Json.open(MOVIES_DB_PATH, "movies")
@@ -108,7 +92,6 @@ def movies_by_field_with_conditions(key : str, condition_func : Callable) -> Lis
         if condition_func(movie[key]):
             matching_movies.append(movie)
     return matching_movies
-
 
 def resolve_actors_in_movie(movie : Movie, info) -> List[Actor]:
     actors : List[Actor] = Json.open(ACTORS_DB_PATH, "actors")
