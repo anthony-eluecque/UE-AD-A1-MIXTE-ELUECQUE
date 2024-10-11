@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+service Booking {
+    rpc GetBookingFromUserId(BookingRequest) returns (BookingResponse) {}
+}
+
+message BookingRequest {
+    string userid = 1;
+}
+
+message BookingResponse {
+    string userid = 1;
+
+    message Dates {
+        string date = 1;
+        repeated string movies = 2;
+    }
+
+    repeated Dates dates = 2;
+}
+
+
+
