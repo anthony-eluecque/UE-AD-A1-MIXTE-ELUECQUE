@@ -1,0 +1,17 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+
+service ShowTime {
+    rpc GetShowTimeByDate(ShowTimeDate) returns (ShowTimeData) {}
+    rpc GetShowTimes(google.protobuf.Empty) returns (stream ShowTimeData) {}
+}
+
+message ShowTimeDate {
+    string date = 1;
+}
+
+message ShowTimeData {
+    string date = 1;
+    repeated string movies = 2;
+}
