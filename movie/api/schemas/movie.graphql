@@ -1,0 +1,15 @@
+type Movie implements EntityId {
+    id: String!
+    title: String!
+    director: String!
+    rating: Float!
+    actors: [Actor]
+}
+
+
+
+input MovieInput {
+    title: String!
+    director: String!
+    rating: Float!
+}

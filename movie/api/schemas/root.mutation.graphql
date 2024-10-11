@@ -1,0 +1,10 @@
+type Mutation {
+    update_movie_rate(_id: String!, _rate: Float!): Movie
+    delete_movie_from_id(_id: String!): MutationResult
+    create_movie(input: MovieInput!): MutationResult
+}
+
+type MutationResult {
+    success: Boolean!
+    error: String
+}
