@@ -13,6 +13,13 @@ from grpc_reflection.v1alpha import reflection
 
 SHOWTIME_URL = "localhost:3002"
 
+def write(bookings):
+   data =  {
+      "bookings" : bookings
+   }
+   with open('{}/data/bookings.json'.format("."), 'w') as f:
+      json.dump(data, f, indent=2)
+
 class BookingServicer(booking_pb2_grpc.BookingServicer):
 
     def __init__(self):
@@ -50,11 +57,8 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
     def AddBookingByUser(self, request, context):
         print("Add Booking by User")
         userid = request.userid
-        date = request.date
-        movieid = request.movieid
 
-
-        showtime_request = showtime_pb2.ShowTimeDate(date=date)
+        showtime_request = showtime_pb2.ShowTimeDate(date=request.date)
         try:
             showtime_response = self.showtime_stub.GetShowTimeByDate(showtime_request, timeout = 10)
             print("Showtime response received:")
@@ -87,11 +91,32 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         
         for booking in self.db:
             for i,date in enumerate(booking["dates"]):
-                pass
+                if date["date"] == str(showtime_response.date):
+                    for movie_id in date["movies"]:
+                        if movie_id == request.movieid:
+                            return booking_pb2.AddBookingResponse(
+                                status="error",
+                                message="An existing booking already exists"
+                            )
+                    
+                    if booking == current_user:
+                        current_user["dates"][i]["movies"].append(request.movieid)
+                        # write in json here
+                        write(self.db)
+                        return booking_pb2.AddBookingResponse(
+                            status="success",
+                            message="Booking created"
+                        )
+                    
 
+        current_user["dates"].append({
+            "date" : request.date,
+            "movies": [request.movieid]
+        })
+        write(self.db)
         return booking_pb2.AddBookingResponse(
             status="success",
-            message="User not found"
+            message="Booking created"
         )
 
     
