@@ -17,12 +17,24 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         self.booking_service = BookingService(repository, showtime_client)
 
     def GetBookingFromUserId(self : Self, request, context : grpc.ServicerContext):
+      
+      
         user_bookings = self.booking_service.repository.get_user_bookings(request.userid)
+        
         if user_bookings:
             print("Booking found!")
+            print(user_bookings)
+            dates_list = []
+            for date_info in user_bookings["dates"]:
+                date_entry = booking_pb2.BookingResponse.Dates(
+                    date=date_info["date"],
+                    movies=date_info["movies"]
+                )
+                dates_list.append(date_entry)
+            
             return booking_pb2.BookingResponse(
                 userid=user_bookings["userid"],
-                dates=user_bookings["dates"]
+                dates=dates_list
             )
         return booking_pb2.BookingResponse(userid="", dates=[])
 
