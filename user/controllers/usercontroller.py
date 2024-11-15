@@ -3,7 +3,6 @@ from repositories import UserRepository
 from models import User, ERRORS
 from context import bp
 import requests
-from services import BookingService, MovieService
 from dto import BookingDTO
 from helpers import ResponseHelper
 from clients import BookingClient, MovieClient
