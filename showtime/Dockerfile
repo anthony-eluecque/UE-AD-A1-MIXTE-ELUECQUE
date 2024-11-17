@@ -1,6 +1,7 @@
-FROM python:3.9-alpine3.13
+FROM python:3.10
 WORKDIR /app
 COPY requirements.txt /app
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 ADD . /app/
-CMD ["python","-u","server.py"]
+CMD ["watchmedo", "auto-restart", "--patterns=*.py", "--recursive", "--", "python", "-u", "server.py"]

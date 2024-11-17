@@ -15,3 +15,5 @@ watchdog==5.0.0
 Werkzeug==3.0.4
 typing-extensions==4.12.2
 python-graphql-client==0.4.3
+grpcio==1.66.1
+grpcio-tools==1.66.1

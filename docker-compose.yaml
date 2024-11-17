@@ -4,3 +4,15 @@ services:
     build: ./movie/
     ports:
       - "3001:3001"
+  showtime:
+    build: ./showtime/
+    ports:
+      - "3002:3002"
+  user:
+    build: ./user/
+    ports:
+        - "3203:3203"
+  booking:
+    build: ./booking/
+    ports:
+        - "3003:3003"
