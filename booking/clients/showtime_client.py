@@ -1,11 +1,12 @@
 import grpc
 import showtime_pb2
 import showtime_pb2_grpc
+import os 
 
 class ShowtimeClient:
-    SHOWTIME_URL = "localhost:3002"
 
     def __init__(self):
+        self.SHOWTIME_URL = os.getenv("SHOWTIME_CLIENT")
         self.channel = grpc.insecure_channel(self.SHOWTIME_URL)
         self.stub = showtime_pb2_grpc.ShowTimeStub(self.channel)
 

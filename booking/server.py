@@ -8,6 +8,7 @@ from typing_extensions import Self
 from clients import ShowtimeClient
 from repositories import BookingRepository
 from services import BookingService
+from dotenv import load_dotenv
 
 class BookingServicer(booking_pb2_grpc.BookingServicer):
 
@@ -66,4 +67,5 @@ def serve():
 
 
 if __name__ == '__main__':
+    load_dotenv()
     serve()

@@ -2,11 +2,12 @@ import grpc
 import booking_pb2
 import booking_pb2_grpc
 from google.protobuf.json_format import MessageToDict
+import os 
 
 class BookingClient:
-    BOOKING_URL = "localhost:3003"
 
     def __init__(self) -> None:
+        self.BOOKING_URL = os.getenv("BOOKING_CLIENT")
         self.channel = grpc.insecure_channel(self.BOOKING_URL)
         self.stub = booking_pb2_grpc.BookingStub(self.channel)
         

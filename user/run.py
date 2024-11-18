@@ -1,6 +1,10 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask
 from context import bp
 import controllers
+import os
 
 app = Flask(__name__)
 

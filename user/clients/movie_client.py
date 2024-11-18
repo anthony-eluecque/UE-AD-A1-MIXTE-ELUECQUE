@@ -1,9 +1,9 @@
 from python_graphql_client import GraphqlClient
+import os 
 
 class MovieClient:
-    MOVIE_URL = "http://127.0.0.1:3001/graphql"
-
     def __init__(self) -> None:
+        self.MOVIE_URL = str(os.getenv("MOVIE_CLIENT")) + "/graphql"
         self.client = GraphqlClient(self.MOVIE_URL)
 
     def get_movie_details(self, movie_id):
