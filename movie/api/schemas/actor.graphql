@@ -1,0 +1,9 @@
+type Actor implements EntityId {
+    id: String!
+    firstname: String!
+    lastname: String!
+    birthyear: Int!
+    films: [String!]
+}
+
+# TODO : Add ActorInput
