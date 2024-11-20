@@ -9,13 +9,22 @@ from grpc_reflection.v1alpha import reflection
 from models import ShowTime
 
 class ShowTimeServicer(showtime_pb2_grpc.ShowTimeServicer):
-    
+    """
+    gRPC servicer for managing showtimes.
+
+    Handles requests to retrieve showtimes by date or a full list of showtimes.
+    """
+
     def __init__(self) -> None:
         with open('{}/data/times.json'.format('.'),"r") as jsf:
             self.db : List[ShowTime] = json.load(jsf)["schedule"]
         print(f"Loaded {len(self.db)} schedule time from JSON")
 
     def GetShowTimeByDate(self, request, context):
+        """
+        Retrieves showtime data for a specific date.
+        """
+
         print("Get Showtime by Date")
         for showtime in self.db:
             if showtime['date'] == request.date:
@@ -30,6 +39,9 @@ class ShowTimeServicer(showtime_pb2_grpc.ShowTimeServicer):
         )
 
     def GetShowTimes(self, request, context):
+        """
+        Streams all showtime data.
+        """
         for showtime in self.db:
             yield showtime_pb2.ShowTimeData(
                 date=showtime['date'],  
@@ -37,6 +49,9 @@ class ShowTimeServicer(showtime_pb2_grpc.ShowTimeServicer):
             )
     
 def serve():
+    """
+    Starts the gRPC server and serves the ShowTime service.
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     showtime_pb2_grpc.add_ShowTimeServicer_to_server(ShowTimeServicer(), server)
     

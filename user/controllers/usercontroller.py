@@ -14,10 +14,17 @@ class UserController:
 
    @bp.route("/", methods=['GET'])
    def home() -> Response:
+      """
+      Home route for the User service.
+      Returns a simple welcome message.
+      """
       return "<h1 style='color:blue'>Welcome to the User service!</h1>"
 
    @bp.route("/<userid>",  methods=['GET'])
    def get_user_by_id(userid) -> Response:
+      """
+      Retrieves user details by user ID.
+      """
       user = UserController.userRepository.get_user_by_id(str(userid))
    
       if (user):
@@ -26,6 +33,14 @@ class UserController:
    
    @bp.route("/", methods=['POST'])
    def create_user() -> Response:
+      """
+      Creates a new user.
+
+      Expects:
+         - id (str): Unique ID of the user.
+         - name (str): Name of the user.
+         - last_active (str): Last active timestamp.
+      """
       req = request.get_json()
       user : User = {
          "id": req["id"],
@@ -37,6 +52,9 @@ class UserController:
    
    @bp.route("/<userid>/bookings", methods=['GET'])
    def get_bookings_from_user_id(userid):
+      """
+      Fetches all bookings for a user by their ID.
+      """
       bookings_data = UserController.booking_client.get_user_bookings(str(userid))
       if (bookings_data):
          bookings = [BookingDTO(**booking) for booking in bookings_data["dates"]]
@@ -45,6 +63,9 @@ class UserController:
    
    @bp.route("/<userid>/bookings/<date>/movies")
    def get_movies_details_from_user_bookings(userid,date):
+      """
+      Retrieves detailed movie information for a user's bookings on a specific date.
+      """
       bookings_data = UserController.booking_client.get_user_bookings(str(userid))
       if not bookings_data:
          return ResponseHelper.error("USER_NOT_FOUND")
@@ -64,6 +85,13 @@ class UserController:
 
    @bp.route("/<userid>/bookings", methods=["POST"])
    def add_user_booking(userid): 
+      """
+      Adds a new booking for a user.
+
+      Expects:
+         - date (str): Booking date.
+         - movieid (str): ID of the movie to book.
+      """
       booking_data = request.get_json()
       if not booking_data["date"] and not booking_data["movieid"]:
          return ResponseHelper.error("MISSING_PARAMETERS")

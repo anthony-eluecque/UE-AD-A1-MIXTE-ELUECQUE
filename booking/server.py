@@ -18,7 +18,9 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         self.booking_service = BookingService(repository, showtime_client)
 
     def GetBookingFromUserId(self : Self, request, context : grpc.ServicerContext):
-      
+        """
+        Retrieves bookings for a specific user.
+        """
       
         user_bookings = self.booking_service.repository.get_user_bookings(request.userid)
         
@@ -40,6 +42,10 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         return booking_pb2.BookingResponse(userid="", dates=[])
 
     def GetBookings(self : Self, request, context : grpc.ServicerContext):
+        """
+        Streams all bookings stored in the repository.
+        """
+
         print("Get All Bookings")
         for booking in self.booking_service.repository.get_all_bookings():
             yield booking_pb2.BookingResponse(
@@ -48,12 +54,20 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             )
 
     def AddBookingByUser(self : Self, request, context : grpc.ServicerContext):
+        """
+        Adds a new booking for a user.
+        """
+
+        
         print("Add Booking by User")
         result = self.booking_service.add_booking(request.userid, request.date, request.movieid)
         return booking_pb2.AddBookingResponse(status=result["status"], message=result["message"])
     
 
 def serve():
+    """
+    Starts the gRPC server and serves the ShowTime service.
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     booking_pb2_grpc.add_BookingServicer_to_server(BookingServicer(), server)
     
