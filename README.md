@@ -74,3 +74,9 @@ P.S : Tout est automatiquement configuré pour vous
 Une seule route est disponible pour cette API :
 
 POST http://127.0.0.1:3001/graphql (voir les fichiers .graphql)
+
+## Modifications apportés supplémentaires
+
+- Système de .env pour faciliter le déploiement dans un environnement de prod ou locale
+
+- Architecture revisité pour chaque micro services afin de rendre le code + maintenable et + lisible (Orienté objet)
