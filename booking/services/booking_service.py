@@ -17,7 +17,7 @@ class BookingService:
         except (ValueError, ConnectionError) as e:
             return {"status": "error", "message": str(e)}
 
-        if movieid not in showtime_response.movies:
+        if movieid in showtime_response.movies:
             return {"status": "error", "message": "Invalid movie ID for the selected date"}
 
         if not self.repository.add_booking(userid, date, movieid):
